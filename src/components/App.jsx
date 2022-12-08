@@ -7,15 +7,10 @@ import Notification from './Notification/Notification';
 import { Statistics } from './Statistics/Statistics';
 
 export function App() {
-  // state = {
-  //   good: 0,
-  //   neutral: 0,
-  //   bad: 0,
-  // };
-
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const feedbackObj = { good, neutral, bad };
 
   // onBtnClick = key => {
   //   this.setState(prev => ({
@@ -23,39 +18,51 @@ export function App() {
   //   }));
   // };
   const onBtnClick = key => {
-    this.setState(prev => ({
-      [key]: prev[key] + 1,
-    }));
-  };
-
-  // countTotalFeedback = () => {
-  //   return Object.values(this.state).reduce((acc, ind) => acc + ind, 0);
-  // };
-  const countTotalFeedback = () => {
-    return Object.values(this.state).reduce((acc, ind) => acc + ind, 0);
-  };
-  // countPositiveFeedbackPercentage = () => {
-  //   const tot = this.countTotalFeedback();
-  //   if (tot) {
-  //     return Math.round((this.state.good * 100) / tot);
-  //   }
-  // };
-  const countPositiveFeedbackPercentage = () => {
-    const tot = countTotalFeedback();
-    if (tot) {
-      return Math.round((this.state.good * 100) / tot);
+    switch (key) {
+      case 'good':
+        setGood(prev => prev + 1);
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1);
+        break;
+      case 'bad':
+        setBad(prev => prev + 1);
+        break;
+      default:
+        return;
     }
   };
 
-  // const total = this.countTotalFeedback();
-  // const { good, neutral, bad } = this.state;
-  // const options = Object.keys(this.state);
+  // * 1
+  const countTotalFeedback = () => {
+    return Object.values(feedbackObj).reduce((acc, ind) => acc + ind, 0);
+  };
+  //*2
+  // const countTotalFeedback = () => {
+  //   return good + neutral + bad;
+  // };
+
+  const countPositiveFeedbackPercentage = () => {
+    const tot = countTotalFeedback();
+    if (tot) {
+      return Math.round((good * 100) / tot);
+    }
+  };
+
+  const total = countTotalFeedback();
+
+  //*1
+  const options = Object.keys(feedbackObj);
+
+  //* 2
+  // const options = ['good', 'neutral', 'bad'];
+
   return (
     <>
       <Section title="Please leave feedback">
         <FeedbackOptions
           options={options}
-          onClickFeedback={this.onBtnClick}
+          onClickFeedback={onBtnClick}
         ></FeedbackOptions>
       </Section>
       <Section title=" Statistics">
